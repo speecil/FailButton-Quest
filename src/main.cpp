@@ -75,6 +75,9 @@ MAKE_HOOK_MATCH(AnUpdate, &HMMainThreadDispatcher::Update, void, HMMainThreadDis
         button->set_interactable(false);
         GameManager->levelFailedEvent->Invoke();
         shouldFail = false;
+        //pauserMENU->continueButton->set_interactable(false);
+        //pauserMENU->restartButton->set_interactable(false);
+        //pauserMENU->backButton->set_interactable(false);
     }
     else{
     }
@@ -85,7 +88,7 @@ MAKE_HOOK_MATCH(AnUpdate, &HMMainThreadDispatcher::Update, void, HMMainThreadDis
     //    }
     //   else{
     //    SetButtonText(button, "Fail");
-     //  }
+    //  }
     //}
     
 }
@@ -95,13 +98,22 @@ MAKE_HOOK_MATCH(AnUpdate, &HMMainThreadDispatcher::Update, void, HMMainThreadDis
 MAKE_HOOK_MATCH(PauseMenuHook, &PauseMenuManager::ShowMenu, void, PauseMenuManager *self)
 {
     PauseMenuHook(self);
-    PauseScreen = BeatSaberUI::CreateFloatingScreen(Vector2(0.0f, 0.0f), Vector3(-0.15f, 0.25f, 2.0f), Vector3(5.0f, 0.0f, 0.0f));
+    PauseScreen = BeatSaberUI::CreateFloatingScreen(Vector2(0.0f, 0.0f), Vector3(-0.15f, 0.25f, 1.87f), Vector3(0.0f, 0.0f, 0.0f), 0.0f, true, false, 0);
     getLogger().info("created UI button");
-    button = BeatSaberUI::CreateUIButton(PauseScreen->get_transform(), "Fail", "PlayButton", UnityEngine::Vector2(7.0f, 11.0f), test);
-    ToggleButtonWordWrapping(button, true);
-    SetButtonTextSize(button, 5.0f);
-    //SetButtonTextSize(button, 5.0f);
+    button = BeatSaberUI::CreateUIButton(PauseScreen->get_transform(), "Fail", "PlayButton", UnityEngine::Vector2(42.2f, 43.8f), UnityEngine::Vector2(11.3f, 11.3f), test);
+    SetButtonTextSize(button, 4.0f);
+    ToggleButtonWordWrapping(button, false);
+    auto layoutElement = button->get_transform()->Find("Content")->GetComponent<UnityEngine::UI::LayoutElement*>();
+    UnityEngine::Object::Destroy(layoutElement);
 }
+
+MAKE_HOOK_MATCH(PauseMenuContinue, &PauseMenuManager::ContinueButtonPressed, void, PauseMenuManager *self) {
+    PauseMenuContinue(self);
+
+    PauseScreen->SetActive(false);;
+    
+    }
+
 // Called at the early stages of game loading
 extern "C" void setup(ModInfo& info) {
     info.id = MOD_ID;
@@ -150,5 +162,6 @@ extern "C" void load() {
     INSTALL_HOOK(getLogger(), MainMenuUIHook);
     INSTALL_HOOK(getLogger(), SceneChanged);
     INSTALL_HOOK(getLogger(), AnUpdate);
+    INSTALL_HOOK(getLogger(), PauseMenuContinue);
     getLogger().info("Installed all hooks!");
 }

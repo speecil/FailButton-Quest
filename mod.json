@@ -5,7 +5,8 @@
   "author": "speecil",
   "version": "0.1.0",
   "packageId": "com.beatgames.beatsaber",
-  "packageVersion": "1.22.0",
+  "coverImage": "cover.png",
+  "packageVersion": "1.25.1",
   "description": "Adds a button that forces a fail",
   "dependencies": [
     {
